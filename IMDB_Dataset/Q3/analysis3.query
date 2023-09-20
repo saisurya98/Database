@@ -1,0 +1,44 @@
+SQL> set timing on
+SQL> 
+SQL> -- Query for analysis 3 : For two given genres and a year range we need to list the actors and actresses each separately who have
+SQL> --acted in movies which have BOTH genres listed for that movie and the count of such movies for each year
+SQL> 
+SQL> -- Note :The mapping of data is been done similarly using join like done in analysis1 
+SQL> -- years range will be 1941 and 1950 , genres will be adventure,comedy
+SQL> 
+SQL> 
+SQL> 
+SQL> --listing all actors for given parameters
+SQL> select nb.primaryname, tb.startyear,tp.category,tb.genres,count(*)
+  2  from sharmac.title_principals tp
+  3  join sharmac.name_basics nb on nb.nconst=tp.nconst
+  4  join sharmac.title_basics tb on tb.tconst=tp.tconst
+  5  where (tb.startyear between '1941' and '1950') and (tb.genres like 'Adventure,Comedy') and (tb.titletype like 'movie') and (tp.category like 'actor') and (tb.startyear not like '\N')
+  6  group by nb.primaryname,tb.startyear,tp.category,tb.genres
+  7  order by tb.startyear asc;
+Elapsed: 00:00:00.399
+SQL> 
+SQL> 
+SQL> --listing all actress for given parameters
+SQL> 
+SQL> select nb.primaryname, tb.startyear,tp.category,tb.genres,count(*)
+  2  from sharmac.title_principals tp
+  3  join sharmac.name_basics nb on nb.nconst=tp.nconst
+  4  join sharmac.title_basics tb on tb.tconst=tp.tconst
+  5  where (tb.startyear between '1941' and '1950') and (tb.genres like 'Adventure,Comedy') and (tb.titletype like 'movie') and (tp.category like 'actress') and (tb.startyear not like '\N')
+  6  group by nb.primaryname,tb.startyear,tp.category,tb.genres
+  7  order by tb.startyear asc;
+Elapsed: 00:00:00.367
+SQL> 
+SQL> --Verification
+SQL> select nb.primaryname, tb.startyear,tp.category,tb.genres,tb.originaltitle
+  2  from sharmac.title_principals tp
+  3  join sharmac.name_basics nb on nb.nconst=tp.nconst
+  4  join sharmac.title_basics tb on tb.tconst=tp.tconst
+  5  where (tb.startyear like '1941') and (tb.genres like 'Adventure,Comedy') and (tb.titletype like 'movie') and (tp.category like 'actress') and (tb.startyear not like '\N')
+  6  group by nb.primaryname,tb.startyear,tp.category,tb.genres,tb.originaltitle
+  7  order by tb.startyear asc;
+Elapsed: 00:00:00.350
+SQL> 
+SQL> 
+SQL> spool off
